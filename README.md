@@ -133,7 +133,8 @@ After login, the steps below should be followed:
 <br>
 ![alexandrecardososantos](https://github.com/alexandrecardososantos/imagens/blob/main/case_wb_09.JPG?raw=true)
 <br>
-Name is <b>localhost</b> and click in <b>Connection</b>.
+
+Fill Name with <b>localhost</b> and then click in <b>Connection</b>.
 <br>
 ![alexandrecardososantos](https://github.com/alexandrecardososantos/imagens/blob/main/case_wb_10.JPG?raw=true)
 <br>
