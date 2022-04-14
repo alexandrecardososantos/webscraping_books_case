@@ -43,7 +43,7 @@ And finnaly a books's page example, where the data is located:
 So the logic will be:
 -  web scrap the home page to create a list of all categories
 -  go through category list and get the list of books
--  go through every book to get the data and create the a dataframe
+-  go through every book to get the data and createalexandrecardososantos/imagens a dataframe
 
 There are probably plenty of other ways to web scrap this site, but this logic seems fine to this project.
 
@@ -71,7 +71,7 @@ This project was developed with Windows operational system, so in order to sched
 
 - [Docker installer](https://runnable.com/docker/install-docker-on-windows-10)
 
-After Docker is already installed, the app enviroment must be seted up in order to run Airflow and PostgreSQL. The project folder must have:
+After Docker is already installed, the app enviroment must be setted up in order to run Airflow and PostgreSQL. The project folder must have:
 
 - [docker-compose.yaml](https://github.com/alexandrecardososantos/webscraping_books_case/blob/main/docker-compose.yaml) file
 - dags folder
@@ -84,7 +84,7 @@ Example:
 <br>
 ![alexandrecardososantos](https://github.com/alexandrecardososantos/imagens/blob/main/case_wb_05.JPG?raw=true)
 
-Yet inside the project folder, run the commands below on terminal. The first two commands below download the images from Docker hub. The images that should be download are seted already inside the docker-compose.yaml file. 
+Yet inside the project folder, run the commands below on terminal. The first two commands below download the images from Docker hub. The images that should be download are setted already inside the docker-compose.yaml file. 
 
 ```sh
 docker-compose up airflow-init
@@ -122,7 +122,7 @@ Now Airflow and PostgreSQL are ready to be used:
 
 ## Create a PostgreSQL data base
 
-The pgAdmin 4 login and password are seted at the docker-compose.yaml file. 
+The pgAdmin 4 login and password are setted at the docker-compose.yaml file. 
 
 ```sh
 login: postgres@postgres.com
@@ -199,7 +199,7 @@ After run the command, refresh the database it is possible to check that the tab
 
 ## Schedule DAG in Apache Airflow
 
-The Airflow login and password are seted at the docker-compose.yaml file. 
+The Airflow login and password are setted at the docker-compose.yaml file. 
 
 ```sh
 login: airflow
