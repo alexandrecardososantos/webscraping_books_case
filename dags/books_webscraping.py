@@ -30,7 +30,6 @@ with DAG(
         from bs4 import BeautifulSoup
         import pandas as pd
         import re
-        import json
 
         url_home = 'https://books.toscrape.com/'
 
