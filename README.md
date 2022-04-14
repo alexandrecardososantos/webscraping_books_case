@@ -43,7 +43,7 @@ And finnaly a books's page example, where the data is located:
 So the logic will be:
 -  web scrap the home page to create a list of all categories
 -  go through category list and get the list of books
--  go through every book to get the data and createalexandrecardososantos/imagens a dataframe
+-  go through every book to get the data and create a dataframe
 
 There are probably plenty of other ways to web scrap this site, but this logic seems fine to this project.
 
