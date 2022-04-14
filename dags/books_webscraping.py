@@ -16,7 +16,6 @@ default_args = {
     'schedule_interval': '@daily'
 }
 
-
 with DAG(    
     dag_id='book_webscraping',
     default_args=default_args,
@@ -32,114 +31,97 @@ with DAG(
         import re
 
         url_home = 'https://books.toscrape.com/'
-
         request = requests.get(url_home)
 
-        soup = BeautifulSoup(request.content, 'html.parser')
+        def _soup(reques_content):
+            return BeautifulSoup(reques_content, 'html.parser')
 
-        category_list = soup.find('ul', {"class": "nav nav-list"})
+        def get_category_list():
+            soup = _soup(request.content)
+            category_list = soup.find('ul', {"class": "nav nav-list"})
+            return category_list
 
-        url_category_list = []
-
-        for category_link in category_list.find_all('a'):
-            category_link = category_link.get('href')
-            
-            if category_link != 'catalogue/category/books_1/index.html':
-                url_category_list.append(category_link.rsplit('catalogue/category/books')[1].rsplit('/')[1])
-
-        books_url = []
-
-        for url_category_list in url_category_list:
-            def category(category):
+        def update_url_category_list():
+            url_category_list = []
+            for category_link in get_category_list().find_all('a'):
+                category_link = category_link.get('href')
                 
-                url = f'https://books.toscrape.com/catalogue/category/books/{category}/index.html'
+                if category_link != 'catalogue/category/books_1/index.html':
+                    url_category_list.append(category_link.rsplit('catalogue/category/books')[1].rsplit('/')[1])
+            return url_category_list
 
-                soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+        books_url_list = []
 
-                category_name = soup.find('div', {'class':'page-header action'}).find('h1').get_text()
+        def get_books_url(soup):
+            book_list = soup.find('section')
 
-                book_list = soup.find('section')
+            for books_list in book_list.find_all('a'):
+                books_list = books_list.get('href')
 
-                for books_list in book_list.find_all('a'):
-                    books_list = books_list.get('href')
+                if books_list not in books_url_list:
+                    if "page" not in books_list:
+                        books_url_list.append(books_list)
 
-                    if books_list not in books_url:
-                        if "page" not in books_list:
-                            books_url.append(books_list)
-                                                
-                page = 2
-                while soup.find('li', {'class':'next'}) is not None:
-
-                    url = f'https://books.toscrape.com/catalogue/category/books/{category}/' + f'page-{page}.html'
-                    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
-
-                    book_list = soup.find('section')
-
-                    for books_list in book_list.find_all('a'):
-                        books_list = books_list.get('href')
-
-                        if books_list not in books_url:
-                            if "page" not in books_list:
-                                books_url.append(books_list)
-
-                    page += 1
-                            
-                return
+        def update_books_list(category):
             
-            category(url_category_list)
+            url = f'{url_home}catalogue/category/books/{category}/index.html'
+            soup = _soup(requests.get(url).content)
+            get_books_url(soup)                                 
+            page = 2
+            while soup.find('li', {'class':'next'}) is not None:
+
+                url = f'{url_home}catalogue/category/books/{category}/page-{page}.html'
+                soup = _soup(requests.get(url).content)
+                get_books_url(soup)
+                page += 1
+
+
+        for url_category in update_url_category_list():
+            update_books_list(url_category)
             
         book_data_base = []
 
-        for books_url in books_url:
-            def books(books):
-                
-                url_book = f'https://books.toscrape.com/catalogue/{books[9:]}'
+        def string_rating(star_rating):
+            star_number = {
+                'One': 1,
+                'Two': 2,
+                'Three': 3,
+                'Four': 4,
+                'Five': 5
+            }
+            return star_number.get(star_rating)
 
-                soup_book = BeautifulSoup(requests.get(url_book).content, 'html.parser')
-                
-                book_category = soup_book.find('ul', {'class':'breadcrumb'}).select('a', href = '../category/books/')[2].get_text()
-
-                book_name = soup_book.find('div', {'class':'col-sm-6 product_main'}).find('h1').get_text()
-                
+        def get_book_description(soup_book):
                 if soup_book.find('article', {'class':'product_page'}).find('p', attrs={'class': None}) is not None:
                     book_description = soup_book.find('article', {'class':'product_page'}).find('p', attrs={'class': None}).get_text()
                 else:
-                    book_description ='NO INFORMATION AVAILABLE'
+                    book_description ='INFORMATION NOT AVAILABLE'
+                return book_description
 
-                book_data_table = soup_book.find('table', {'class':'table table-striped'})
+        def update_book_data_base(books):
+            url_book = f'{url_home}catalogue/{books[9:]}'
+            soup_book = _soup(requests.get(url_book).content)
+            book_category = soup_book.find('ul', {'class':'breadcrumb'}).select('a', href = '../category/books/')[2].get_text()
+            book_name = soup_book.find('div', {'class':'col-sm-6 product_main'}).find('h1').get_text()
+            book_description = get_book_description(soup_book)
+            book_data_table = soup_book.find('table', {'class':'table table-striped'})
+            book_star_rating = soup_book.find('div', {'class':'col-sm-6 product_main'}).find('p', {"class" : 'star-rating'})
+            star_rating = book_star_rating['class'][1]
+            rating = string_rating(star_rating)
 
-                book_star_rating = soup_book.find('div', {'class':'col-sm-6 product_main'}).find('p', {"class" : 'star-rating'})
+            book_data = [book_category, book_name, book_description, rating]
 
-                star_rating = book_star_rating['class'][1]
+            for book_items in book_data_table.find_all('td'):
+                if 'available' in book_items.get_text():
+                    book_items = re.findall('[0-9]+',book_items.get_text())[0]
+                else:
+                    book_items = book_items.get_text()
+                book_data.append(book_items)
 
-                def string_rating(star_rating):
-                    star_number = {
-                        'One': 1,
-                        'Two': 2,
-                        'Three': 3,
-                        'Four': 4,
-                        'Five': 5
-                    }
-                    return star_number.get(star_rating)
+            book_data_base.append(book_data)
 
-                rating = string_rating(star_rating)
-
-                book_data = [book_category, book_name, book_description, rating]
-
-                for books_data_table in book_data_table.find_all('td'):
-
-                    if 'available' in books_data_table.get_text():
-                        books_data_table = re.findall('[0-9]+',books_data_table.get_text())[0]
-                    else:
-                        books_data_table = books_data_table.get_text()
-
-                    book_data.append(books_data_table)
-
-                book_data_base.append(book_data)
-                
-                return
-
-            books(books_url)
+        for books_url in books_url_list:
+            update_book_data_base(books_url)
             
         book_data = pd.DataFrame(book_data_base,columns=['CATEGORY','PRODUCT_NAME', 'PRODUCT_DESCRIPTION','RATING','UPC','PRODUCT_TYPE', 'PRICE', 'PRICE_WITH_TAX', 'TAX','AVAILABLE_IN_STOCK', 'NUMBER_OF_REVIEWS'])
 
