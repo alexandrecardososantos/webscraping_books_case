@@ -45,7 +45,7 @@ So the logic will be:
 -  go through category list and get the list of books
 -  go through every book to get the data and create the a dataframe
 
-There's probably other ways to web scrap this site, but this logic seems fine to this project.
+There are probably plenty of other ways to web scrap this site, but this logic seems fine to this project.
 
 ## Web scrap using Python libraries
 
