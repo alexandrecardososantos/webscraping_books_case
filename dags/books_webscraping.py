@@ -33,8 +33,8 @@ with DAG(
         url_home = 'https://books.toscrape.com/'
         request = requests.get(url_home)
 
-        def _soup(reques_content):
-            return BeautifulSoup(reques_content, 'html.parser')
+        def _soup(request_content):
+            return BeautifulSoup(request_content, 'html.parser')
 
         def get_category_list():
             soup = _soup(request.content)
