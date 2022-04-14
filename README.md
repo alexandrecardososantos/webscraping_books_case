@@ -268,3 +268,6 @@ Looks like 112 books have 2 or less copies in that day. There's no filter of day
 
 ![alexandrecardososantos](https://github.com/alexandrecardososantos/imagens/blob/main/case_wb_25.JPG?raw=true)
 
+## Conclusion
+
+Any <b>data analysts users</b> that have enough SQL skills and get access to this database would be able to answer those questions. They wouldn't have to worry about how the data was loaded in the table, but just consume.
