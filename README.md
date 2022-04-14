@@ -49,7 +49,7 @@ There are probably plenty of other ways to web scrap this site, but this logic s
 
 ## Web scrap using Python libraries
 
-Python's libraries requirements used in this project:
+Python's libraries requirements for this project:
 - pandas version 1.2.5
   - manipulate data with Python
 - numpy version 1.19.5
