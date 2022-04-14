@@ -166,15 +166,18 @@ The data will be arised from web scrapping as a pandas dataframe and then insert
 ```sh
 CREATE TABLE IF NOT EXISTS public.book_data
 (
-    book_name character(255) COLLATE pg_catalog."default",
+    product_type character(20) COLLATE pg_catalog."default",
+    category character(20) COLLATE pg_catalog."default",
+    product_name text COLLATE pg_catalog."default",
+    product_description text COLLATE pg_catalog."default",
     rating integer,
     upc character(16) COLLATE pg_catalog."default",
-    product_type character(20) COLLATE pg_catalog."default",
     price double precision,
     price_with_tax double precision,
     tax double precision,
     available_in_stock integer,
-    number_of_reviews integer
+    number_of_reviews integer,
+    reference date
 )
 
 TABLESPACE pg_default;
