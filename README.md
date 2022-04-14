@@ -191,7 +191,7 @@ ALTER TABLE IF EXISTS public.book_data
 ![alexandrecardososantos](https://github.com/alexandrecardososantos/imagens/blob/main/case_wb_14.JPG?raw=true)
 <br>
 
-After run the command, refresh the database it is possible to check that the table was created.
+After run the command, refresh the database and then it will be possible to check that the table was created.
 <br>
 
 ![alexandrecardososantos](https://github.com/alexandrecardososantos/imagens/blob/main/case_wb_15.JPG?raw=true)
